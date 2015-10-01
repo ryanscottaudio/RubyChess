@@ -16,6 +16,6 @@ require_relative 'board'
 
 if __FILE__ == $PROGRAM_NAME
 
-  Game.new("Petr", "Ryan")
+  Game.new("White", "Black")
 
 end

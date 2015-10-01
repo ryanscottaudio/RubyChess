@@ -42,7 +42,6 @@ class HumanPlayer < Player
 
   def prompt(move)
     puts "Please enter your #{move} position."
-    print " >"
   end
 
 end
