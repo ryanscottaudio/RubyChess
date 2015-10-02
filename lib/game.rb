@@ -26,29 +26,43 @@ class Game
   end
 
   def play_turn
+    selected = nil;
     board.render(cursor)
     puts "#{current_player.name}'s turn!"
 
     begin
       current_player.prompt("starting")
       starting_pos = move_cursor.dup
-      current_player.prompt("ending")
-      ending_pos = move_cursor.dup
-      board.move(current_player.color, starting_pos, ending_pos)
-
+      board.checkColor(current_player.color, starting_pos)
     rescue MoveError => e
       puts e.message
       retry
     end
+
+    selected = starting_pos
+
+    begin
+      current_player.prompt("ending")
+      ending_pos = move_cursor(selected).dup
+      if starting_pos == ending_pos
+        self.play_turn
+        return
+      end
+      board.move(current_player.color, starting_pos, ending_pos)
+    rescue MoveError => e
+      puts e.message
+      retry
+    end
+
     switch_players
   end
 
-  def move_cursor
+  def move_cursor(selected = nil)
     keystroke = ""
     until keystroke == "\r" || keystroke == " "
       keystroke = current_player.get_move
       action(keystroke)
-      board.render(cursor)
+      board.render(cursor, selected)
     end
 
     cursor

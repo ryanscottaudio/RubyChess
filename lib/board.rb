@@ -27,7 +27,7 @@ class Board
     end
   end
 
-  def render(cursor_pos = nil)
+  def render(cursor_pos = nil, selected_pos = nil)
     system "clear" or system "cls"
     (0...SIZE).each do |x|
       (0...SIZE).each do |y|
@@ -38,6 +38,8 @@ class Board
         end
         if [x, y] == cursor_pos
           print space.on_red
+        elsif [x, y] ==  selected_pos
+          print space.on_green
         elsif (x.even? && y.even?) || (x.odd? && y.odd?)
           print space
         else
@@ -54,7 +56,6 @@ class Board
   end
 
   def move(player_color, start_pos, end_pos)
-    raise MoveError.new("No piece on starting position!") unless self[start_pos]
 
     moves = self[start_pos].moves
     if start_pos == end_pos
@@ -63,11 +64,17 @@ class Board
       raise MoveError.new("That piece can't move there!")
     elsif self[start_pos].move_into_check?(end_pos)
       raise MoveError.new("That move would put you in check!")
-    elsif !self[start_pos].same_color?(player_color)
-      raise MoveError.new("You can only move pieces of your color!")
     end
 
     move!(start_pos, end_pos)
+  end
+
+  def checkColor(player_color, start_pos)
+    if !self[start_pos]
+      raise MoveError.new("There's no piece there!")
+    elsif !self[start_pos].same_color?(player_color)
+      raise MoveError.new("You can only move pieces of your color!")
+    end
   end
 
   def move!(start_pos, end_pos)
