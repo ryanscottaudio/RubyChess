@@ -45,7 +45,7 @@ class Game
 
   def move_cursor
     keystroke = ""
-    until keystroke == "\r"
+    until keystroke == "\r" || keystroke == " "
       keystroke = current_player.get_move
       action(keystroke)
       board.render(cursor)
@@ -65,6 +65,8 @@ class Game
     when "\e[D"
       cursor_left
     when "\r"
+      nil
+    when " "
       nil
     when "S"
       save_game
