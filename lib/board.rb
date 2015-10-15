@@ -27,10 +27,15 @@ class Board
     end
   end
 
-  def render(cursor_pos = nil, selected_pos = nil)
+  def render(cursor_pos = nil, selected_pos = nil, color)
     system "clear" or system "cls"
-    (0...SIZE).each do |x|
-      (0...SIZE).each do |y|
+    (0...SIZE).each do |a|
+      (0...SIZE).each do |b|
+        if color == :black
+          x, y = 7 - a, 7 - b
+        else
+          x, y = a, b
+        end
         if self[[x, y]]
           space = " #{self[[x, y]].to_s} "
         else
@@ -45,7 +50,7 @@ class Board
         else
           print space.on_white
         end
-        print "\n" if y == SIZE - 1
+        print "\n" if b == SIZE - 1
       end
     end
   end

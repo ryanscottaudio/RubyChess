@@ -27,7 +27,7 @@ class Game
 
   def play_turn
     selected = nil;
-    board.render(cursor)
+    board.render(cursor, selected, current_player.color)
     puts "#{current_player.name}'s turn!"
 
     begin
@@ -63,7 +63,7 @@ class Game
       keystroke = current_player.get_move
       action(keystroke)
       self.check_cursor
-      board.render(cursor, selected)
+      board.render(cursor, selected, current_player.color)
     end
 
     cursor
@@ -72,13 +72,29 @@ class Game
   def action(char)
     case char
     when "\e[A"
-      cursor_up
+      if current_player.color == :white
+        cursor_up
+      else
+        cursor_down
+      end
     when "\e[B"
-      cursor_down
+      if current_player.color == :white
+        cursor_down
+      else
+        cursor_up
+      end
     when "\e[C"
-      cursor_right
+      if current_player.color == :white
+        cursor_right
+      else
+        cursor_left
+      end
     when "\e[D"
-      cursor_left
+      if current_player.color == :white
+        cursor_left
+      else
+        cursor_right
+      end
     when "\r"
       nil
     when " "
